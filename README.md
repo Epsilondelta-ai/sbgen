@@ -1,16 +1,27 @@
 # sbgen
 
-OpenCode plugin that automatically sets up Storybook, generates stories for all components/pages, verifies them with Playwright, and builds.
+Agent skill that automatically sets up Storybook, generates stories for all components/pages, verifies them with Playwright, and builds.
+
+Uses the open [SKILL.md](https://www.mdskills.ai/specs/skill-md) standard — works with **27+ AI coding tools**.
+
+## Compatible Tools
+
+| Tool | Skill | `/sbgen` Command |
+|------|:-----:|:----------------:|
+| **OpenCode + oh-my-opencode** | ✅ Auto-loads | ✅ |
+| **OpenCode** | ✅ | ✅ |
+| **Claude Code** | ✅ | — |
+| **Cursor** | ✅ | — |
+| **Codex CLI** | ✅ | — |
+| **ChatGPT** | ✅ | — |
+| **Gemini CLI** | ✅ | — |
+| **VS Code (Copilot)** | ✅ | — |
+
+> The `/sbgen` slash command is OpenCode-specific. Other tools use the skill via prompt (mention `sbgen` or `storybook setup`).
 
 ## Supported Frameworks
 
-- React
-- Next.js
-- Vue 3
-- Nuxt
-- Svelte
-- SvelteKit
-- Angular
+React · Next.js · Vue 3 · Nuxt · Svelte · SvelteKit · Angular
 
 ## Install
 
@@ -20,6 +31,8 @@ OpenCode plugin that automatically sets up Storybook, generates stories for all 
 curl -fsSL https://raw.githubusercontent.com/Epsilondelta-ai/sbgen/main/install-remote.sh | bash
 ```
 
+Auto-detects installed tools (OpenCode, Claude Code) and installs to the right location.
+
 ### From source
 
 ```bash
@@ -28,51 +41,51 @@ cd sbgen
 bash install.sh
 ```
 
-### Manual
+### Manual (any SKILL.md-compatible tool)
 
-Download and place files manually:
+Copy `SKILL.md` to your tool's skills directory:
 
 ```bash
-# Skill
+# OpenCode
 mkdir -p ~/.config/opencode/skills/sbgen
 curl -fsSL https://raw.githubusercontent.com/Epsilondelta-ai/sbgen/main/skills/sbgen/SKILL.md \
   -o ~/.config/opencode/skills/sbgen/SKILL.md
 
-# Command
-mkdir -p ~/.config/opencode/command
-curl -fsSL https://raw.githubusercontent.com/Epsilondelta-ai/sbgen/main/command/sbgen.md \
-  -o ~/.config/opencode/command/sbgen.md
+# Claude Code
+mkdir -p ~/.claude/skills/sbgen
+curl -fsSL https://raw.githubusercontent.com/Epsilondelta-ai/sbgen/main/skills/sbgen/SKILL.md \
+  -o ~/.claude/skills/sbgen/SKILL.md
+
+# Project-level (works with Cursor, Codex, etc.)
+mkdir -p .claude/skills/sbgen
+curl -fsSL https://raw.githubusercontent.com/Epsilondelta-ai/sbgen/main/skills/sbgen/SKILL.md \
+  -o .claude/skills/sbgen/SKILL.md
 ```
 
 ## Uninstall
 
 ```bash
-rm -rf ~/.config/opencode/skills/sbgen ~/.config/opencode/command/sbgen.md
+bash uninstall.sh
 ```
 
-Or if installed from source:
+Or manually:
 
 ```bash
-cd sbgen
-bash uninstall.sh
+rm -rf ~/.config/opencode/skills/sbgen ~/.config/opencode/command/sbgen.md ~/.claude/skills/sbgen
 ```
 
 ## Usage
 
-Open any frontend project in OpenCode and run:
+**OpenCode:**
 
 ```
 /sbgen
 ```
 
-### Compatibility
+**Other tools (Claude Code, Cursor, etc.):**
 
-| | `/sbgen` command | `sbgen` in prompt |
-|--|:-:|:-:|
-| **OpenCode + oh-my-opencode** | ✅ | ✅ Auto-loads skill via Intent Gate |
-| **OpenCode only** | ✅ | ⚠️ Model-dependent (not guaranteed) |
+Mention `sbgen` or ask to "set up Storybook and generate stories" — the skill auto-loads.
 
-> **Tip**: `/sbgen` slash command is the most reliable way to trigger the workflow regardless of your setup. Mentioning `sbgen` in your prompt for auto-loading is only reliable with [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode).
 ### What it does
 
 1. **Detects** your framework, package manager, and language
@@ -82,24 +95,20 @@ Open any frontend project in OpenCode and run:
 5. **Verifies** each story renders without errors (Playwright)
 6. **Builds** Storybook and reports results
 
-### With arguments
-
-```
-/sbgen --force
-```
-
-Pass `--force` to regenerate stories even for components that already have them.
-
 ## Project Structure
 
 ```
 sbgen/
 ├── skills/
 │   └── sbgen/
-│       └── SKILL.md            # Storybook automation knowledge base
+│       └── SKILL.md            # Storybook automation knowledge base (primary)
+├── .claude/
+│   └── skills/
+│       └── sbgen/
+│           └── SKILL.md        # Claude Code native path (copy)
 ├── command/
-│   └── sbgen.md                # /sbgen command workflow
-├── install.sh                  # Local installer (from cloned repo)
+│   └── sbgen.md                # /sbgen slash command (OpenCode only)
+├── install.sh                  # Local installer
 ├── install-remote.sh           # Remote installer (curl one-liner)
 ├── uninstall.sh                # Uninstaller
 └── README.md
@@ -107,13 +116,13 @@ sbgen/
 
 ## How It Works
 
-**Skill** (`SKILL.md`): Contains comprehensive Storybook automation knowledge — framework detection, CSF 3.0 story templates, verification patterns, and troubleshooting guides. Auto-loaded when "sbgen" is mentioned in conversation.
+**Skill** (`SKILL.md`): Contains comprehensive Storybook automation knowledge — framework detection, CSF 3.0 story templates per framework, verification patterns, and troubleshooting guides. Follows the open SKILL.md standard.
 
-**Command** (`sbgen.md`): The `/sbgen` slash command. Collects project info via inline shell, loads the skill, and orchestrates the 6-phase workflow.
+**Command** (`sbgen.md`): OpenCode-specific `/sbgen` slash command. Collects project info via inline shell, loads the skill, and orchestrates the 6-phase workflow.
 
 ## Requirements
 
-- [OpenCode](https://opencode.ai) (oh-my-opencode is optional but recommended for prompt-based auto-loading)
+- An AI coding tool that supports [SKILL.md](https://www.mdskills.ai/specs/skill-md) (see Compatible Tools above)
 - Node.js 18+
 - A frontend project (React, Vue, Svelte, Angular, or their meta-frameworks)
 
