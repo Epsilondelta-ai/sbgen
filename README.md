@@ -65,8 +65,14 @@ Open any frontend project in OpenCode and run:
 /sbgen
 ```
 
-Or mention `sbgen` in your prompt — the skill will auto-load.
+### Compatibility
 
+| | `/sbgen` command | `sbgen` in prompt |
+|--|:-:|:-:|
+| **OpenCode + oh-my-opencode** | ✅ | ✅ Auto-loads skill via Intent Gate |
+| **OpenCode only** | ✅ | ⚠️ Model-dependent (not guaranteed) |
+
+> **Tip**: `/sbgen` slash command is the most reliable way to trigger the workflow regardless of your setup. Mentioning `sbgen` in your prompt for auto-loading is only reliable with [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode).
 ### What it does
 
 1. **Detects** your framework, package manager, and language
@@ -107,7 +113,7 @@ sbgen/
 
 ## Requirements
 
-- [OpenCode](https://opencode.ai) with [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) plugin
+- [OpenCode](https://opencode.ai) (oh-my-opencode is optional but recommended for prompt-based auto-loading)
 - Node.js 18+
 - A frontend project (React, Vue, Svelte, Angular, or their meta-frameworks)
 
